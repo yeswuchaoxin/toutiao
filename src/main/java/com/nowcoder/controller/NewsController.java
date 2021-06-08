@@ -40,4 +40,17 @@ public class NewsController {
         return "detail";
     }
 
+    @RequestMapping(path = {"/image"}, method = {RequestMethod.GET})
+    @ResponseBody
+    public void getImage(@RequestParam("name") String imageName,
+                         HttpServletResponse response) {
+        try {
+            response.setContentType("image/jpeg");
+            StreamUtils.copy(new FileInputStream(new
+                    File(ToutiaoUtil.IMAGE_DIR + imageName)), response.getOutputStream());
+        } catch (Exception e) {
+            logger.error("读取图片错误" + imageName + e.getMessage());
+        }
+    }
+
 }
