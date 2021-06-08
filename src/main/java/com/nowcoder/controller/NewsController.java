@@ -1,6 +1,7 @@
 package com.nowcoder.controller;
 
 import com.nowcoder.model.*;
+import com.nowcoder.service.NewsService;
 import com.nowcoder.service.UserService;
 import com.nowcoder.util.ToutiaoUtil;
 import org.slf4j.Logger;
@@ -33,10 +34,19 @@ public class NewsController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    NewsService newsService;
 
     @RequestMapping(path = {"/news/{newsId}"}, method = {RequestMethod.GET})
     public String newsDetail(@PathVariable("newsId") int newsId, Model model) {
+    try{
+        News news = newsService.getById(newsId);
+        model.addAttribute("news", news);
+        model.addAttribute("owner", userService.getUser(news.getUserId()));
 
+    }catch (Exception e) {
+        logger.error("获取资讯明细错误" + e.getMessage());
+    }
         return "detail";
     }
 
